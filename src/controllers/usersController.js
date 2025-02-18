@@ -25,8 +25,8 @@ const router = {
   addUser: (req, res) => {
    const {name, email, age} = req.body;
    if (!name || !email || !age){
-    return res.status(400).json{erro: "Preencha todos os campos para cadastro!"}
-   }
+    return res.status(400).json({erro: "Preencha todos os campos para cadastro!"});
+   };
 
    const newUser = lista.addUser;
     res.status(201).json(newUser);
