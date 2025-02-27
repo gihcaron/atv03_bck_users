@@ -1,10 +1,11 @@
 const Post = require("../models/Post.js");
-const PostList = require("../models/PostList");
+const PostList = require("../models/PostList.js");
 const lista = new PostList();
 
 // Adicionando usuários iniciais
-lista.addPost(new Post("João Silva", "joao@example.com", 30));
-lista.addPost(new Post("Maria Souza", "maria@example.com", 25));
+lista.addPost(new Post('João Silva', 10, 5, 1, 2, 'imagem1'));
+lista.addPost(new Post('Maria Souza', 20, 10, 2, 4, 'imagem2'));
+lista.addPost(new Post('José Bezerra', 30.000, 15, 3, 6, 'imagem3'));
 
 const router = {
   getAllPosts: (req, res) => {
@@ -23,7 +24,7 @@ const router = {
 },
 
   addPost: (req, res) => {
-   const {name, email, age} = req.body;
+   const {} = req.body;
    if (!name || !email || !age){
     return res.status(400).json({erro: "Preencha todos os campos para cadastro!"});
    };
