@@ -13,7 +13,9 @@ class UserList {
 
     getUserById(id) {
         const user = this.users.find(user => user.id == id);
-        if (!user) throw new Error("Usuário não encontrado");
+        if (!user) {
+             throw new Error("Usuário não encontrado");
+        }
         return user;
     }
 
