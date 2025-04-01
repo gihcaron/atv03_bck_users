@@ -1,19 +1,13 @@
-const User = require("../models/User.js");
-const UserList = require("../models/UserList");
-const lista = new UserList();
-
-// Adicionando usuários iniciais
-lista.addUser(new User("João Silva", "joao@example.com", 30));
-lista.addUser(new User("Maria Souza", "maria@example.com", 25));
+const  userModel = require("../models/userModel")
 
 const router = {
   getAllUsers: (req, res) => {
-    res.json(lista.getAllUsers());
+    res.json(userModel.getAllUsers());
   },
 
   getUserById: (req, res) => {
    try{
-    const users = lista.getUserById(req.params.id);
+    const users = userModel.getUserById(req.params.id);
     res.status(200).json(users);
    } catch (error){ 
     res.status(400).json({ message: "Erro ao buscar usuário", error });
@@ -27,7 +21,7 @@ addUser: (req, res) => {
           throw new Error("Todos os campos são obrigatórios");
       }
       const user = new User(name, email, age);
-      lista.addUser(user);
+      userModel.addUser(user);
       res.status(200).json({ message: "Usuário adicionado com sucesso!" }); 
   } catch (error) {
       res.status(400).json({ message: "Erro ao adicionar usuário", error: error.message });
@@ -36,7 +30,7 @@ addUser: (req, res) => {
 
   updateUser: (req, res) => {
     try{
-      res.status(200).json(lista.updateUser(req.params.id, req.body));
+      res.status(200).json(userModel.updateUser(req.params.id, req.body));
     } catch (error){
       res.status(400).json({ message: "Erro ao atualizar usuário", error});
     
@@ -46,7 +40,7 @@ addUser: (req, res) => {
 
   deleteUser: (req, res) => {
     try{
-      lista.deleteUser(parseInt(req.params.id));
+      userModel.deleteUser(parseInt(req.params.id));
       res.status(200).json({ 
         message: "Usuário deletado com sucesso!" });
     } catch (error) {
