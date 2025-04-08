@@ -1,54 +1,72 @@
-const postModel = require("../models/postModel")
-
+const pool = require("../config/database");
 
 const router = {
- 
-  getAllPosts: (req, res) => {
-    res.json(postModel.getAllPosts());
+  getAllPosts: async (req, res) => {
+    try {
+      const result = await pool.query("SELECT * FROM posts"); 
+      res.status(200).json(result.rows);
+    } catch (error) {
+      res.status(500).json({ message: "Erro ao buscar posts", error: error.message });
+    }
   },
 
-
-  getPostById: (req, res) => {
-   try{
-    const posts = postModel.getPostById(req.params.id);
-    res.status(200).json(posts);
-   } catch (error){ 
-    res.status(400).json({ message: "Erro ao buscar post", error });
-   }
-},
-
-  addPost: (req, res) => {
-   try{
-    const {autor,imagens} = req.body;
-    if (!autor || !imagens) {
-      throw new Error("Todos os campos são obrigatórios");
+  getPostById: async (req, res) => {
+    try {
+      const result = await pool.query("SELECT * FROM posts WHERE id = $1", [req.params.id]); 
+      const post = result.rows[0];
+      if (!post) {
+        return res.status(404).json({ message: "Post não encontrado" });
+      }
+      res.status(200).json(post);
+    } catch (error) {
+      res.status(500).json({ message: "Erro ao buscar post", error: error.message });
     }
-    const post = new Post(autor, 0, 0, 0, 0, imagens);
-    postModel.addPost(post);
-    res.status(200).json({ message: "Post adicionado com sucesso!" });
+  },
+
+  addPost: async (req, res) => {
+    try {
+      const { autor, imagem } = req.body;
+      if (!autor || !imagem) {
+        throw new Error("Todos os campos são obrigatórios");
+      }
+      const result = await pool.query(
+        "INSERT INTO posts (autor, imagem) VALUES ($1, $2) RETURNING *",
+        [autor, imagem]
+      );
+      res.status(201).json({ message: "Post adicionado com sucesso!", post: result.rows[0] });
     } catch (error) {
       res.status(400).json({ message: "Erro ao adicionar post", error: error.message });
     }
-   },
+  },
 
-  updatePost: (req, res) => {
-    try{
-      res.status(200).json(postModel.updatePost(req.params.id, req.body));
-    }
-    catch (error){
-      res.status(400).json({ message: "Erro ao atualizar post", error});
+  updatePost: async (req, res) => {
+    try {
+      const { autor, imagem } = req.body;
+      const result = await pool.query(
+        "UPDATE posts SET autor = $1, imagem = $2 WHERE id = $3 RETURNING *",
+        [autor, imagem, req.params.id]
+      );
+      const updatedPost = result.rows[0];
+      if (!updatedPost) {
+        return res.status(404).json({ message: "Post não encontrado" });
+      }
+      res.status(200).json({ message: "Post atualizado com sucesso!", post: updatedPost });
+    } catch (error) {
+      res.status(400).json({ message: "Erro ao atualizar post", error: error.message });
     }
   },
 
-  deletePost: (req, res) => {
-    try{
-      postModel.deletePost(parseInt(req.params.id));
-      res.status(200).json({ 
-        message: "Post deletado com sucesso!" });
+  deletePost: async (req, res) => {
+    try {
+      const result = await pool.query("DELETE FROM posts WHERE id = $1 RETURNING *", [req.params.id]); // Deleta o post
+      const deletedPost = result.rows[0];
+      if (!deletedPost) {
+        return res.status(404).json({ message: "Post não encontrado" });
+      }
+      res.status(200).json({ message: "Post deletado com sucesso!" });
     } catch (error) {
       res.status(400).json({ message: "Erro ao deletar post", error: error.message });
     }
-    
   }
 };
 
