@@ -1,4 +1,3 @@
-const pool = require("../config/database");
 const userModel = require("../models/userModel");
 
 const router = {

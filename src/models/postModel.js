@@ -1,4 +1,4 @@
-const pool = require("../../config/database.js");
+const pool = require("../config/database");
 
 const getAllPosts = async () => {
     const result = await pool.query("SELECT * FROM posts");
@@ -10,11 +10,11 @@ const getPostById = async (id) => {
     return result.rows[0];
 };
 
-const addPost = async (user_id, autor, likes, comentarios, salvamentos, compartilhamentos, imagem) => {
+const addPost = async (user_id, autor, likes, comentarios, salvamentos, compartilhamentos, imagem, photo) => {
     const result = await pool.query(
-        `INSERT INTO posts (user_id, autor, likes, comentarios, salvamentos, compartilhamentos, imagem) 
-         VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-        [user_id, autor, likes, comentarios, salvamentos, compartilhamentos, imagem]
+        `INSERT INTO posts (user_id, autor, likes, comentarios, salvamentos, compartilhamentos, imagem, photo) 
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+        [user_id, autor, likes, comentarios, salvamentos, compartilhamentos, imagem, photo]
     );
     return result.rows[0];
 };
@@ -31,7 +31,7 @@ const updatePost = async (id, autor, likes, comentarios, salvamentos, compartilh
 
 const deletePost = async (id) => { 
     const result = await pool.query("DELETE FROM posts WHERE id = $1 RETURNING *", [id]);
-    return result.rows[0];
+    return { massage: "Post deletado com sucesso!"};
 };
 
 module.exports = { getAllPosts, getPostById, addPost, updatePost, deletePost };
