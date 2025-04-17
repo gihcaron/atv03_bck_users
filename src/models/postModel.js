@@ -34,4 +34,4 @@ const deletePost = async (id) => {
     return { massage: "Post deletado com sucesso!"};
 };
 
-module.exports = { getAllPosts, getPostById, addPost, updatePost, deletePost };
+module.exports = { getAllPosts, getPostById, addPost, updatePost, deletePost};

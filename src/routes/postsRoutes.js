@@ -77,7 +77,6 @@ router.post("/", upload.single("photo"), postController.addPost);
  *       404:
  *         description: Item não encontrado
  */
-
 router.get("/:id", postController.getPostById);
 
 /**
@@ -117,8 +116,27 @@ router.get("/:id", postController.getPostById);
  *       200:
  *         description: Post atualizado com sucesso
  */
-
 router.put("/:id", postController.updatePost);
-// router.delete("/:id", postController.deletePost);
+
+/**
+ * @swagger
+ * /api/posts/{id}:
+ *   delete:
+ *     summary: Deleta um post
+ *     tags: [posts]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do post a ser deletado
+ *     responses:
+ *       200:
+ *         description: Post deletado
+ *       404:
+ *         description: Post não encontrado
+ */
+router.delete("/:id", postController.deletePost);
 
 module.exports = router;
