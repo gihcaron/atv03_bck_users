@@ -19,12 +19,12 @@ const addPost = async (user_id, autor, likes, comentarios, salvamentos, comparti
     return result.rows[0];
 };
 
-const updatePost = async (id, autor, likes, comentarios, salvamentos, compartilhamentos, imagem) => {
+const updatePost = async ( user_id, autor, likes, comentarios, salvamentos, compartilhamentos, imagem, photo) => {
     const result = await pool.query(
         `UPDATE posts 
-         SET autor = $1, likes = $2, comentarios = $3, salvamentos = $4, compartilhamentos = $5, imagem = $6 
-         WHERE id = $7 RETURNING *`,
-        [autor, likes, comentarios, salvamentos, compartilhamentos, imagem, id]
+         SET user_id = $1, autor = $2, likes = $3, comentarios = $4, salvamentos = $5, compartilhamentos = $6, imagem = $7, photo = $8 
+         RETURNING *`,
+        [user_id, autor, likes, comentarios, salvamentos, compartilhamentos, imagem, photo,]
     );
     return result.rows[0];
 };

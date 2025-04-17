@@ -22,49 +22,46 @@ const getPostById = async (req, res) => {
  }
 };
 
-//   getPostById: async (req, res) => {
-//     try {
-//       const result = await postModel.query("SELECT * FROM posts WHERE id = $1", [req.params.id]); 
-//       const post = result.rows[0];
-//       if (!post) {
-//         return res.status(404).json({ message: "Post não encontrado" });
-//       }
-//       res.status(200).json(post);
-//     } catch (error) {
-//       res.status(500).json({ message: "Erro ao buscar post", error: error.message });
-//     }
-//   },
+
 
 const addPost = async (req, res) => {
   try {
     const { user_id, autor, likes, comentarios, salvamentos, compartilhamentos, imagem } = req.body;
     const photo = req.file ? req.file.filename : null;
-    if (!autor || !imagem) {
+    const newPost = await postModel.addPost(user_id, autor, likes, comentarios, salvamentos, compartilhamentos, imagem, photo); 
+    if (!autor || !imagem || !photo) {
             throw new Error("Todos os campos são obrigatórios");
-          }
-          const result = await postModel.query(
-            "INSERT INTO posts (autor, imagem) VALUES ($1, $2) RETURNING *",
-            [autor, imagem]
-          );
+    }
+    res.status(201).json(newPost);
   } catch (error) {
-    res.status(500).jso({message: "Erro ao adicionar post"})
+    console.error("Erro:", error.message);
+    res.status(500).json({message: "Erro ao adicionar post"})
   }
 };
-  // addPost: async (req, res) => {
-  //   try {
-  //     const { autor, imagem } = req.body;
-  //     if (!autor || !imagem) {
-  //       throw new Error("Todos os campos são obrigatórios");
-  //     }
-  //     const result = await postModel.query(
-  //       "INSERT INTO posts (autor, imagem) VALUES ($1, $2) RETURNING *",
-  //       [autor, imagem]
-  //     );
-  //     res.status(201).json({ message: "Post adicionado com sucesso!", post: result.rows[0] });
-  //   } catch (error) {
-  //     res.status(400).json({ message: "Erro ao adicionar post", error: error.message });
-  //   }
-  // },
+
+
+const updatePost = async (req, res) => {
+  try {
+    const {  user_id, autor, likes, comentarios, salvamentos, compartilhamentos, imagem} = req.body;
+    const result = await postModel.updatePost(
+      req.params.id,
+      user_id,
+      autor,
+      likes,
+      comentarios,
+      salvamentos,
+      compartilhamentos,
+      imagem
+    );
+    const updatedPost = result.rows[0];
+    if (!updatedPost) {
+      return res.status(404).json({ message: "Post não encontrado" });
+    }
+    res.status(200).json({ message: "Post atualizado com sucesso!", post: updatedPost });
+  } catch (error) {
+    res.status(400).json({ message: "Erro ao atualizar post", error: error.message });
+  }
+};
 
 //   updatePost: async (req, res) => {
 //     try {
@@ -97,4 +94,4 @@ const addPost = async (req, res) => {
 //   }
 // };
 
-module.exports = {getAllPosts, getPostById};
+module.exports = {getAllPosts, getPostById, addPost, updatePost,};
