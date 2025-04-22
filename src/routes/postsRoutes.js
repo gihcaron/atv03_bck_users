@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const postController = require("../controllers/postController");
 const upload = require("./../config/upload.js");
+const apiKeyMiddleware = require("../config/apiKey.js")
+
+router.use(apiKeyMiddleware);
 
 /**
  * @swagger
