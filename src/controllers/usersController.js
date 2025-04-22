@@ -39,15 +39,13 @@ const userModel = require("../models/userModel");
   const updateUser = async (req, res) => {
     try {
       const { name, email, age } = req.body;
-      const user = await userModel.query(
-        "UPDATE users SET name = $1, email = $2, age = $3 WHERE id = $4 RETURNING *",
-        [name, email, age, req.params.id]
-      );
-      const updatedUser = result.rows[0];
-      if (!updatedUser) {
+      const updateUser = await userModel.updateUser(req.params.id, name, email, age);
+      if (!updateUser) {
         return res.status(404).json({ message: "Usuário não encontrado" });
       }
-      res.status(200).json({ message: "Usuário atualizado com sucesso!", user: updatedUser });
+     
+    res.json(updateUser);
+
     } catch (error) {
       res.status(500).json({ message: "Erro ao atualizar usuário", error: error.message });
     }

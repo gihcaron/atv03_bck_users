@@ -41,7 +41,7 @@ const addPost = async (req, res) => {
 const updatePost = async (req, res) => {
   try {
     const {  user_id, autor, likes, comentarios, salvamentos, compartilhamentos, imagem} = req.body;
-    const result = await postModel.updatePost(
+    const updatePost = await postModel.updatePost(
       req.params.id,
       user_id,
       autor,
@@ -51,11 +51,12 @@ const updatePost = async (req, res) => {
       compartilhamentos,
       imagem
     );
-    const updatedPost = result.rows[0];
-    if (!updatedPost) {
+
+    if (!updatePost) {
       return res.status(404).json({ message: "Post não encontrado" });
     }
-    res.status(200).json({ message: "Post atualizado com sucesso!", post: updatedPost });
+
+    res.status(200).json({ message: "Post atualizado com sucesso!", post: updatePost });
   } catch (error) {
     res.status(400).json({ message: "Erro ao atualizar post", error: error.message });
   }

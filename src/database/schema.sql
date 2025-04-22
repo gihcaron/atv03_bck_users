@@ -19,13 +19,13 @@ CREATE TABLE posts (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
+
+
+INSERT INTO users (name, email, age) VALUES
 ('João Silva', 'joao@gmail.com', 30),
 ('Flavia Mendes', 'fmendes@gmail.com', 17),
 ('Amanda Mechi', 'amandinha123@gmail.com', 37)
 ('Lucas Oliveira', 'lucas@gmail.com', 25),
-
-
-INSERT INTO users (name, email, age) VALUES
 ('João Otavio', 'joaoOtavio@gmail.com', 30),
 ('João Sila', 'joaos@gmail.com', 30),
 ('João Fernando', 'joaof@gmail.com', 30),
@@ -84,3 +84,12 @@ INSERT INTO posts (user_id, autor, likes, comentarios, salvamentos, compartilham
 (1, 'João Silva', 10, 5, 2, 3, 'imagem1.jpg'),
 (2, 'Flavia Mendes', 20, 10, 5, 8, 'imagem2.jpg'),
 (3, 'Amanda Mechi', 15, 7, 3, 4, 'imagem3.jpg');
+
+
+-- -- Remover a restrição de chave estrangeira existente
+-- ALTER TABLE posts DROP CONSTRAINT posts_user_id_fkey;
+
+-- -- Adicionar a restrição de chave estrangeira com ON DELETE CASCADE
+-- ALTER TABLE posts
+-- ADD CONSTRAINT posts_user_id_fkey
+-- FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;

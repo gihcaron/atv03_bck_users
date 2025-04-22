@@ -20,9 +20,12 @@ const pool = require("../config/database");
     };
 
    const updateUser = async (id, name, email, age) => {
-        const query = "UPDATE users SET name = $1, email = $2, age = $3 WHERE id = $4 RETURNING *";
-        const result = await pool.query(query, [name, email, age, id]);
-        return result.rows[0];
+       
+       const result = await pool.query("UPDATE users SET name = $1, email = $2, age = $3 WHERE id = $4 RETURNING *",
+         [name, email, age, id]
+       );
+       return result.rows[0];
+    
     };
 
     const deleteUser = async (id) => {
